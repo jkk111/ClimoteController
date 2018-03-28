@@ -1,0 +1,7 @@
+{
+  "node_app": true,
+  "route": {
+    "domain": "localhost",
+    "path": "/climote"
+  }
+}
