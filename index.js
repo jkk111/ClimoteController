@@ -22,7 +22,7 @@ const TRANSACTION_STATUS_URL = `${BASE_URL}/api/status`
 
 
 // Application Logic
-let login = () => {
+let login = async() => {
   let req_body = {
     pincode: climote_pass,
     unitnumber: climote_user,
@@ -30,10 +30,16 @@ let login = () => {
     email: climote_email
   }
 
-  return request({
+  let resp = await request({
     url: LOGIN_URL,
     form: req_body
   });
+
+  let { token } = resp;
+  token = Buffer.from(":" + token).toString("base64");
+  let Authorization = `Basic ${token}`
+  Authorization = { Authorization }
+  return Authorization;
 }
 
 let boost = (headers, form) => request({ url: BOOST_URL, headers, form })
@@ -41,7 +47,7 @@ let transaction_status = (headers, form) => request({ url: TRANSACTION_STATUS_UR
 let status = (headers, form) => request({ url: STATUS_URL, headers, form})
 
 let task_transaction_status = async(transactionid) => {
-  let Authorization = await task_login();
+  let Authorization = await login();
   return transaction_status(Authorization, transactionid);
 }
 
@@ -51,7 +57,8 @@ let task_boost = async(time) => {
 }
 
 let task_status = async() => {
-  let Authorization = await task_login();
+  let Authorization = await login();
+  console.log(Authorization)
   return status(Authorization);
 }
 

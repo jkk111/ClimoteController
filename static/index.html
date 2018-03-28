@@ -2,11 +2,12 @@
 <html>
 <head>
   <title></title>
+  <base href="/climote/">
   <script type="text/javascript">
     let poll_status = async() => {
       let el = document.getElementById('value');
       console.log("Starting Request")
-      let resp = await fetch('/status')
+      let resp = await fetch('status')
       let data = await resp.json();
       console.log(data);
       data = data.message;
@@ -24,7 +25,7 @@
     }
 
     let boost = (time) => {
-      fetch(`/boost?boost=${time}`)
+      fetch(`boost?boost=${time}`)
     }
 
     addEventListener('DOMContentLoaded', () => {
