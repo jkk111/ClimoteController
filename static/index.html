@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script type="text/javascript">
+    let poll_status = async() => {
+      let el = document.getElementById('value');
+      console.log("Starting Request")
+      let resp = await fetch('/status')
+      let data = await resp.json();
+      console.log(data);
+      data = data.message;
+      data = data.zone1 || { boost: 'pending' }
+      console.log(data);
+      let content = 'Active'
+      if(data.boost === 'pending') {
+        content = 'Pending'
+      } else {
+        content = parseInt(data.boost) > 0 ? (`Active (${data.boost}) ${data.temperature}c` ) : 'Inactive'
+      }
+
+
+      el.innerText = content;
+    }
+
+    let boost = (time) => {
+      fetch(`/boost?boost=${time}`)
+    }
+
+    addEventListener('DOMContentLoaded', () => {
+      setInterval(poll_status, 15000);
+      poll_status()
+    })
+  </script>
+  <style type="text/css">
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #value {
+      text-align: center;
+    }
+
+    #controls {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .button {
+      flex-grow: 1;
+      text-align: center;
+      font-weight: 800;
+      font-size: 4em;
+      padding: 2em;
+      margin: 0 1em;
+      border: thick solid black;
+      background: white;
+    }
+
+    * {
+      user-select: none;
+    }
+
+    .button:hover {
+      filter: brightness(60%);
+      cursor: pointer;
+    }
+
+    .button:active {
+      filter: brightness(30%);
+    }
+
+    @media screen and (max-width: 1000px) {
+      #controls {
+        flex-direction: column!important;
+        margin: 1em!important;
+      }
+
+      #content {
+        margin: 1em;
+      }
+
+      .button {
+        margin: 0!important;
+      }
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div id="content">
+    <h1 id="value"></h1>
+    <div id="controls">
+      <span class="button" onclick="boost(0)">Disable</span>
+      <span class="button" onclick="boost(1)">1 Hour</span>
+      <span class="button" onclick="boost(2)">2 Hour</span>
+    </div>
+  </div>
+</body>
+</html>
