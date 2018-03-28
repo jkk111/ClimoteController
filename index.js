@@ -58,7 +58,6 @@ let task_boost = async(time) => {
 
 let task_status = async() => {
   let Authorization = await login();
-  console.log(Authorization)
   return status(Authorization);
 }
 
