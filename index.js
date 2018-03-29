@@ -53,7 +53,8 @@ let task_transaction_status = async(transactionid) => {
 
 let task_boost = async(time) => {
   let Authorization = await login();
-  let data = `[[1, ${time}]]`;
+  let data = { data: `[[1, ${time}]]` };
+  return boost(Authorization, data)
 }
 
 let task_status = async() => {
