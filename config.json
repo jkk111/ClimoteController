@@ -1,7 +1,13 @@
 {
   "node_app": true,
-  "route": {
-    "domain": "localhost",
-    "path": "/climote"
-  }
+  "routes": [
+    {
+      "domain": "localhost",
+      "path": "/climote"
+    },
+    {
+      "domain": "john-kevin.me",
+      "path": "/climote"
+    }
+  ]
 }
