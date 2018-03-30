@@ -5,23 +5,29 @@
   <base href="/climote/">
   <script type="text/javascript">
     let poll_status = async() => {
-      let el = document.getElementById('value');
-      console.log("Starting Request")
-      let resp = await fetch('status')
-      let data = await resp.json();
-      console.log(data);
-      data = data.message;
-      data = data.zone1 || { boost: 'pending' }
-      console.log(data);
-      let content = 'Active'
-      if(data.boost === 'pending') {
-        content = 'Pending'
-      } else {
-        content = parseInt(data.boost) > 0 ? (`Active (${data.boost}) ${data.temperature}c` ) : 'Inactive'
+      try {
+        let el = document.getElementById('value');
+        console.log("Starting Request")
+        let resp = await fetch('status')
+        let data = await resp.json();
+        console.log(data);
+        data = data.message;
+        data = data.zone1 || { boost: 'pending' }
+        console.log(data);
+        let content = 'Active'
+        if(data.boost === 'pending') {
+          content = 'Pending'
+        } else {
+          content = parseInt(data.boost) > 0 ? (`Active (${data.boost}) ${data.temperature}c` ) : 'Inactive'
+        }
+
+
+        el.innerText = content;
+      } catch(e) {
+        console.log(e);
+      } finally {
+        setTimeout(poll_status, 15000);
       }
-
-
-      el.innerText = content;
     }
 
     let boost = (time) => {
@@ -29,7 +35,6 @@
     }
 
     addEventListener('DOMContentLoaded', () => {
-      setInterval(poll_status, 15000);
       poll_status()
     })
   </script>

@@ -57,9 +57,21 @@ let task_boost = async(time) => {
   return boost(Authorization, data)
 }
 
+let sleep = async(ms) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+}
+
 let task_status = async() => {
-  let Authorization = await login();
-  return status(Authorization);
+  try {
+    let Authorization = await login();
+    let result = await status(Authorization);
+    return result;
+  } catch(e) {
+    await sleep(2000)
+    return task_status();
+  }
 }
 
 // API Endpoints
